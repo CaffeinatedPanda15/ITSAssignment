@@ -56,7 +56,16 @@ CREATE TABLE EmployeeShift (
     FOREIGN KEY (EmployeeID) REFERENCES Employee(EmployeeID)
 );
 
-
+INSERT INTO EmployeeShift (EmployeeID, ShiftDate, StartTime, EndTime, Department) VALUES
+(3,  '2025-08-15', '09:00', '17:00', 'Clothing'),
+(4,  '2025-08-15', '08:00', '16:00', 'Home Decor'),
+(6,  '2025-08-15', '09:00', '17:00', 'Home Decor'),
+(8,  '2025-08-15', '09:00', '17:00', 'Clothing'),
+(10, '2025-08-15', '08:00', '16:00', 'Food'),
+(12, '2025-08-15', '10:00', '18:00', 'Food'),
+(15, '2025-08-15', '09:00', '17:00', 'Clothing'),
+(18, '2025-08-15', '08:00', '16:00', 'Home Decor'),
+(19, '2025-08-15', '08:00', '16:00', 'Clothing');
 
 
 
@@ -95,6 +104,19 @@ CREATE TABLE Orders (
     FOREIGN KEY (ManagerID)   REFERENCES Manager(ManagerID)
 );
     
+
+CREATE TRIGGER AutoGenerateOrder
+AFTER UPDATE OF ProductQuantity ON StoreStock
+FOR EACH ROW
+WHEN NEW.ProductQuantity <= NEW.ReorderLevel
+BEGIN
+    INSERT INTO Orders (WarehouseID, ManagerID, StockType, ExpectedArrival)
+    VALUES ((SELECT WarehouseID FROM Warehouse WHERE InventoryType = NEW.ProductType LIMIT 1),
+        NULL,
+        NEW.ProductType,
+        DATE('now', '+7 days')
+    );
+END;
 
 CREATE TABLE StoreStock (
     ProductID INTEGER PRIMARY KEY AUTOINCREMENT,
