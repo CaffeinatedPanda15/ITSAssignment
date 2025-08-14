@@ -1,92 +1,233 @@
-CREATE TABLE FoodStock (
-    FoodID INTEGER PRIMARY KEY,
-    FoodName VARCHAR(25),
-    Quantity INTEGER,
-    Price DECIMAL(8,2),
-    ProductID INTEGER,
-    SellBy DATE,
-    FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
+CREATE TABLE Employee (
+    EmployeeID INTEGER PRIMARY KEY AUTOINCREMENT,
+    EmployeeName VARCHAR(25) NOT NULL,
+    EmployeeSurname VARCHAR(25) NOT NULL,
+    EmailAddress VARCHAR(25),
+    Position VARCHAR(25) NOT NULL,
+    PhoneNumber VARCHAR(10)
+ );
+ 
+INSERT INTO Employee (EmployeeName, EmployeeSurname, EmailAddress, Position, PhoneNumber) VALUES
+('Alice', 'Smith', 'alice.smith@email.com', 'Manager', '0823456781'),
+('Bob', 'Johnson', 'bob.johnson@email.com', 'Cashier', '0823456782'),
+('Carol', 'Williams', 'carol.williams@email.com', 'Stock Clerk', '0823456783'),
+('David', 'Brown', 'david.brown@email.com', 'Supervisor', '0823456784'),
+('Emma', 'Jones', 'emma.jones@email.com', 'Manager', '0823456785'),
+('Frank', 'Garcia', 'frank.garcia@email.com', 'Cashier', '0823456786'),
+('Grace', 'Martinez', 'grace.martinez@email.com', 'Stock Clerk', '0823456787'),
+('Henry', 'Rodriguez', 'henry.rodriguez@email.com', 'Supervisor', '0823456788'),
+('Isabel', 'Lee', 'isabel.lee@email.com', 'Manager', '0823456789'),
+('Jack', 'Walker', 'jack.walker@email.com', 'Cashier', '0823456790'),
+('Karen', 'Hall', 'karen.hall@email.com', 'Stock Clerk', '0823456791'),
+('Leo', 'Allen', 'leo.allen@email.com', 'Supervisor', '0823456792'),
+('Mia', 'Young', 'mia.young@email.com', 'Manager', '0823456793'),
+('Nathan', 'King', 'nathan.king@email.com', 'Cashier', '0823456794'),
+('Olivia', 'Wright', 'olivia.wright@email.com', 'Stock Clerk', '0823456795'),
+('Peter', 'Scott', 'peter.scott@email.com', 'Supervisor', '0823456796'),
+('Quinn', 'Green', 'quinn.green@email.com', 'Manager', '0823456797'),
+('Rachel', 'Adams', 'rachel.adams@email.com', 'Cashier', '0823456798'),
+('Steve', 'Baker', 'steve.baker@email.com', 'Stock Clerk', '0823456799'),
+('Tina', 'Nelson', 'tina.nelson@email.com', 'Supervisor', '0823456800');
+
+
+
+CREATE TABLE Manager (
+    ManagerID INTEGER PRIMARY KEY AUTOINCREMENT,
+    EmployeeID INTEGER NOT NULL UNIQUE,
+    FOREIGN KEY (EmployeeID) REFERENCES Employee(EmployeeID)
+);
+    
+
+INSERT INTO Manager (EmployeeID)
+SELECT EmployeeID
+FROM Employee
+WHERE Position = 'Manager';
+
+
+
+
+CREATE TABLE EmployeeShift (
+    ShiftID INTEGER PRIMARY KEY AUTOINCREMENT,
+    EmployeeID INTEGER,
+    ShiftDate DATE NOT NULL,
+    StartTime TIME NOT NULL,
+    EndTime TIME NOT NULL,
+    Department VARCHAR(25)  NOT NULL CHECK (Department IN ('Food','Clothing','Home Decor')),
+    FOREIGN KEY (EmployeeID) REFERENCES Employee(EmployeeID)
 );
 
-INSERT INTO FoodStock (FoodID, FoodName, Quantity, Price, ProductID, SellBy) VALUES
-(1, 'Apple', 100, 0.50, 1, '2025-09-30'),
-(2, 'Banana', 120, 0.30, 2, '2025-09-25'),
-(3, 'Carrot', 80, 0.20, 3, '2025-09-28'),
-(4, 'Milk', 50, 1.50, 4, '2025-09-15'),
-(5, 'Bread', 70, 1.00, 5, '2025-09-12'),
-(6, 'Cheese', 40, 2.50, 6, '2025-10-05'),
-(7, 'Eggs', 200, 0.10, 7, '2025-09-20'),
-(8, 'Yogurt', 60, 0.80, 8, '2025-09-18'),
-(9, 'Orange', 90, 0.60, 9, '2025-09-27'),
-(10, 'Tomato', 110, 0.40, 10, '2025-09-22');
 
-CREATE TABLE ClothingStock (
-    ClothingID INTEGER PRIMARY KEY,
-    ClothingName VARCHAR(25),
-    Size VARCHAR(25),
-    Colour VARCHAR(25),
-    Quantity INTEGER,
-    Price DECIMAL(8,2),
-    ProductID INTEGER,
-    FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
+
+
+
+CREATE TABLE Warehouse (
+    WarehouseID INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name VARCHAR(25) NOT  NULL,
+    Location VARCHAR(25) NOT NULL,
+    PhoneNumber VARCHAR(10),
+    InventoryType VARCHAR(25)CHECK (InventoryType IN ('Food','Clothing','Home Decor'))
 );
 
-INSERT INTO ClothingStock (ClothingID, ClothingName, Size, Colour, Quantity, Price, ProductID) VALUES
-(1, 'T-Shirt', 'M', 'Red', 50, 15.99, 1),
-(2, 'Jeans', 'L', 'Blue', 40, 35.00, 2),
-(3, 'Jacket', 'XL', 'Black', 20, 60.00, 3),
-(4, 'Hat', 'One Size', 'Green', 70, 10.00, 4),
-(5, 'Sweater', 'S', 'Yellow', 30, 25.00, 5),
-(6, 'Socks', 'M', 'White', 100, 5.00, 6),
-(7, 'Scarf', 'One Size', 'Pink', 60, 12.00, 7),
-(8, 'Gloves', 'L', 'Brown', 40, 18.00, 8),
-(9, 'Dress', 'M', 'Purple', 15, 45.00, 9),
-(10, 'Shorts', 'S', 'Gray', 35, 20.00, 10);
-
-CREATE TABLE HomeDecoStock (
-    DecorID INTEGER PRIMARY KEY,
-    DecorName VARCHAR(25),
-    Material VARCHAR(25),
-    Quantity INTEGER,
-    Price DECIMAL(8,2),
-    ProductID INTEGER,
-    FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
+INSERT INTO Warehouse (Name, Location, PhoneNumber, InventoryType) VALUES
+('Cape Town Warehouse', 'Cape Town', '0211234567', 'Food'),
+('Johannesburg Warehouse', 'Johannesburg', '0112345678', 'Clothing'),
+('Durban Warehouse', 'Durban', '0312345678', 'Home Decor'),
+('Pretoria Warehouse', 'Pretoria', '0123456789', 'Food'),
+('Port Elizabeth Warehouse', 'Port Elizabeth', '0412345678', 'Clothing'),
+('Bloemfontein Warehouse', 'Bloemfontein', '0512345678', 'Home Decor'),
+('Stellenbosch Warehouse', 'Stellenbosch', '0218765432', 'Food'),
+('Pietermaritzburg Warehouse', 'Pietermaritzburg', '0331234567', 'Clothing'),
+('Cape Town Harbor Warehouse', 'Cape Town', '0217654321', 'Home Decor'),
+('Johannesburg Suburban Warehouse', 'Johannesburg', '0118765432', 'Food'
 );
 
-INSERT INTO HomeDecoStock (DecorID, DecorName, Material, Quantity, Price, ProductID) VALUES
-(1, 'Vase', 'Ceramic', 25, 30.00, 1),
-(2, 'Lamp', 'Metal', 15, 45.50, 2),
-(3, 'Cushion', 'Cotton', 40, 12.00, 3),
-(4, 'Rug', 'Wool', 10, 75.00, 4),
-(5, 'Picture Frame', 'Wood', 50, 20.00, 5),
-(6, 'Clock', 'Plastic', 30, 18.50, 6),
-(7, 'Mirror', 'Glass', 12, 60.00, 7),
-(8, 'Candlestick', 'Brass', 20, 25.00, 8),
-(9, 'Shelf', 'Metal', 8, 90.00, 9),
-(10, 'Curtains', 'Silk', 22, 35.00, 10);
 
+
+CREATE TABLE Orders (
+    OrderID        INTEGER PRIMARY KEY AUTOINCREMENT,
+    WarehouseID    INTEGER NOT NULL,
+    ManagerID      INTEGER NOT NULL,
+    StockType      VARCHAR(25) NOT NULL CHECK (StockType IN ('Food','Clothing','Home Decor')),
+    OrderDate      DATE NOT NULL DEFAULT (DATE('now')),
+    ExpectedArrival DATE,
+    DeliveryStatus VARCHAR(10) NOT NULL DEFAULT 'Pending',
+    FOREIGN KEY (WarehouseID) REFERENCES Warehouse(WarehouseID),
+    FOREIGN KEY (ManagerID)   REFERENCES Manager(ManagerID)
+);
+    
 
 CREATE TABLE StoreStock (
-    ProductID INTEGER PRIMARY KEY,
+    ProductID INTEGER PRIMARY KEY AUTOINCREMENT,
     ProductName VARCHAR(25),
-    ProductType VARCHAR(25),
+    ProductType VARCHAR(25)CHECK (ProductType IN ('Food','Clothing','Home Decor')),
     ProductQuantity INTEGER,
     ReorderLevel INTEGER,
     LastUpdate DATE
 );
 
 
-INSERT INTO StoreStock (ProductID, ProductName, ProductType, ProductQuantity, ReorderLevel, LastUpdate) VALUES
-(1, 'Apple', 'Fruit', 150, 50, '2025-08-01'),
-(2, 'Banana', 'Fruit', 200, 60, '2025-08-02'),
-(3, 'Carrot', 'Vegetable', 100, 40, '2025-08-03'),
-(4, 'Milk', 'Dairy', 80, 30, '2025-08-04'),
-(5, 'Bread', 'Bakery', 90, 25, '2025-08-05'),
-(6, 'Chicken Breast', 'Meat', 120, 50, '2025-08-06'),
-(7, 'Orange Juice', 'Beverage', 70, 20, '2025-08-07'),
-(8, 'Rice', 'Grains', 300, 100, '2025-08-08'),
-(9, 'Eggs', 'Dairy', 180, 60, '2025-08-09'),
-(10, 'Cheddar Cheese', 'Dairy', 60, 20, '2025-08-10');
+INSERT INTO StoreStock (ProductName, ProductType, ProductQuantity, ReorderLevel, LastUpdate) VALUES
+('Rice', 'Food', 100, 20, DATE('now')),
+('Beans', 'Food', 80, 15, DATE('now')),
+('Pasta', 'Food', 60, 10, DATE('now')),
+('Canned Tuna', 'Food', 50, 10, DATE('now')),
+('Bread', 'Food', 40, 5, DATE('now')),
+('Milk', 'Food', 70, 15, DATE('now')),
+('Cheese', 'Food', 30, 5, DATE('now')),
+('Tomato Sauce', 'Food', 90, 20, DATE('now')),
+('Sugar', 'Food', 120, 25, DATE('now')),
+('Salt', 'Food', 150, 30, DATE('now')),
+('T-Shirt', 'Clothing', 100, 20, DATE('now')),
+('Jeans', 'Clothing', 80, 15, DATE('now')),
+('Jacket', 'Clothing', 50, 10, DATE('now')),
+('Sweater', 'Clothing', 60, 10, DATE('now')),
+('Shorts', 'Clothing', 70, 15, DATE('now')),
+('Skirt', 'Clothing', 40, 5, DATE('now')),
+('Dress', 'Clothing', 30, 5, DATE('now')),
+('Socks', 'Clothing', 120, 25, DATE('now')),
+('Hat', 'Clothing', 90, 20, DATE('now')),
+('Scarf', 'Clothing', 50, 10, DATE('now')),
+('Vase', 'Home Decor', 50, 10, DATE('now')),
+('Lamp', 'Home Decor', 40, 8, DATE('now')),
+('Cushion', 'Home Decor', 60, 15, DATE('now')),
+('Wall Art', 'Home Decor', 30, 5, DATE('now')),
+('Curtains', 'Home Decor', 25, 5, DATE('now')),
+('Rug', 'Home Decor', 20, 5, DATE('now')),
+('Mirror', 'Home Decor', 15, 5, DATE('now')),
+('Clock', 'Home Decor', 35, 10, DATE('now')),
+('Picture Frame', 'Home Decor', 70, 20, DATE('now')),
+('Candles', 'Home Decor', 100, 25, DATE('now'));
 
 
-SELECT * FROM StoreStock;
+
+CREATE TABLE FoodStock (
+    FoodID INTEGER PRIMARY KEY AUTOINCREMENT,
+    FoodName VARCHAR(25),
+    Quantity INTEGER,
+    Price DECIMAL(8,2),
+    ProductID INTEGER,
+    SellBy DATE,
+    FOREIGN KEY (ProductID) REFERENCES StoreStock(ProductID)
+);
+
+INSERT INTO FoodStock (FoodName, Quantity, Price, ProductID, SellBy) VALUES
+('Rice', 100, 50.00, 1, DATE('2025-12-31')),
+('Beans', 80, 40.00, 2, DATE('2025-11-30')),
+('Pasta', 60, 35.00, 3, DATE('2025-10-15')),
+('Canned Tuna', 50, 25.00, 4, DATE('2026-01-31')),
+('Bread', 40, 20.00, 5, DATE('2025-08-20')),
+('Milk', 70, 30.00, 6, DATE('2025-08-25')),
+('Cheese', 30, 45.00, 7, DATE('2025-12-15')),
+('Tomato Sauce', 90, 15.00, 8, DATE('2026-02-28')),
+('Sugar', 120, 10.00, 9, DATE('2026-03-31')),
+('Salt', 150, 8.00, 10, DATE('2026-04-30'));
+
+
+
+CREATE TABLE ClothingStock (
+    ClothingID INTEGER PRIMARY KEY AUTOINCREMENT,
+    ClothingName VARCHAR(25),
+    Size VARCHAR(25),
+    Colour VARCHAR(25),
+    Quantity INTEGER,
+    Price DECIMAL(8,2),
+    ProductID INTEGER,
+    FOREIGN KEY (ProductID) REFERENCES StoreStock(ProductID)
+);
+
+
+INSERT INTO ClothingStock (ClothingName, Size, Colour, Quantity, Price, ProductID) VALUES
+('T-Shirt', 'M', 'Red', 100, 150.00, 11),
+('Jeans', 'L', 'Blue', 80, 350.00, 12),
+('Jacket', 'XL', 'Black', 50, 500.00, 13),
+('Sweater', 'M', 'Grey', 60, 400.00, 14),
+('Shorts', 'S', 'Green', 70, 200.00, 15),
+('Skirt', 'M', 'Pink', 40, 250.00, 16),
+('Dress', 'L', 'Blue', 30, 450.00, 17),
+('Socks', 'One Size', 'White', 120, 50.00, 18),
+('Hat', 'One Size', 'Black', 90, 120.00, 19),
+('Scarf', 'One Size', 'Red', 50, 100.00, 20);
+
+
+CREATE TABLE HomeDecoStock (
+    DecorID INTEGER PRIMARY KEY AUTOINCREMENT,
+    DecorName VARCHAR(25),
+    Material VARCHAR(25),
+    Quantity INTEGER,
+    Price DECIMAL(8,2),
+    ProductID INTEGER,
+    FOREIGN KEY (ProductID) REFERENCES StoreStock(ProductID)
+);
+
+INSERT INTO HomeDecoStock (DecorName, Material, Quantity, Price, ProductID) VALUES
+('Vase', 'Ceramic', 50, 250.00, 21),
+('Lamp', 'Metal', 40, 450.00, 22),
+('Cushion', 'Cotton', 60, 150.00, 23),
+('Wall Art', 'Canvas', 30, 500.00, 24),
+('Curtains', 'Polyester', 25, 300.00, 25),
+('Rug', 'Wool', 20, 600.00, 26),
+('Mirror', 'Glass', 15, 400.00, 27),
+('Clock', 'Wood', 35, 200.00, 28),
+('Picture Frame', 'Wood', 70, 120.00, 29),
+('Candles', 'Wax', 100, 80.00, 30);
+
+
+CREATE TABLE Customer (
+    CustomerID INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name        VARCHAR(25) NOT NULL,
+    Surname     VARCHAR(25) NOT NULL,
+    EmailAddress VARCHAR(50),
+    PhoneNumber  VARCHAR(15)
+);
+
+INSERT INTO Customer (Name, Surname, EmailAddress, PhoneNumber) VALUES
+('Alice', 'Smith', 'alice.smith@email.com', '0823456789'),
+('Bob', 'Johnson', 'bob.johnson@email.com', '0834567890'),
+('Carol', 'Williams', 'carol.williams@email.com', '0845678901'),
+('David', 'Brown', 'david.brown@email.com', '0856789012'),
+('Emma', 'Jones', 'emma.jones@email.com', '0867890123'),
+('Frank', 'Garcia', 'frank.garcia@email.com', '0878901234'),
+('Grace', 'Martinez', 'grace.martinez@email.com', '0889012345'),
+('Henry', 'Rodriguez', 'henry.rodriguez@email.com', '0890123456'),
+('Isabel', 'Lee', 'isabel.lee@email.com', '0812345678'),
+('Jack', 'Walker', 'jack.walker@email.com', '0823456780');
