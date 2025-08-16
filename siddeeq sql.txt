@@ -1,0 +1,545 @@
+-- ========================================================
+--  DROP EXISTING TABLES (if any)
+-- ========================================================
+DROP TABLE IF EXISTS SalesTransactions;
+DROP TABLE IF EXISTS Customer;
+DROP TABLE IF EXISTS HomeDecoStock;
+DROP TABLE IF EXISTS ClothingStock;
+DROP TABLE IF EXISTS FoodStock;
+DROP TABLE IF EXISTS Orders;
+DROP TABLE IF EXISTS StoreStock;
+DROP TABLE IF EXISTS Warehouse;
+DROP TABLE IF EXISTS EmployeeShift;
+DROP TABLE IF EXISTS Manager;
+DROP TABLE IF EXISTS Employee;
+
+-- ========================================================
+--  EMPLOYEE TABLE AND INSERTS
+-- ========================================================
+CREATE TABLE Employee (
+    EmployeeID INTEGER PRIMARY KEY AUTOINCREMENT,
+    EmployeeName VARCHAR(25) NOT NULL,
+    EmployeeSurname VARCHAR(25) NOT NULL,
+    EmailAddress VARCHAR(25),
+    Position VARCHAR(25) NOT NULL,
+    PhoneNumber VARCHAR(10)
+);
+
+INSERT INTO Employee (EmployeeName, EmployeeSurname, EmailAddress, Position, PhoneNumber) VALUES
+('John', 'Smith', 'john.smith@example.com', 'Cashier', '0723456789'),
+('Alice', 'Brown', 'alice.brown@example.com', 'Stock Clerk', '0739876543'),
+('Michael', 'Johnson', 'michael.johnson@example.com', 'Manager', '0745678901'),
+('Sophia', 'Green', 'sophia.g@example.com', 'Cashier', '0728889999'),
+('David', 'Lee', 'david.lee@example.com', 'Stock Clerk', '0712345678'),
+('Emma', 'Davis', 'emma.davis@example.com', 'Cashier', '0734567890'),
+('Liam', 'Taylor', 'liam.taylor@example.com', 'Supervisor', '0741122334'),
+('Olivia', 'White', 'olivia.white@example.com', 'Cashier', '0729988776'),
+('Noah', 'Johnson', 'noah.j@example.com', 'Stock Clerk', '0745556677'),
+('Ava', 'Martinez', 'ava.martinez@example.com', 'Supervisor', '0732233445');
+-- ========================================================
+--  MANAGER TABLE AND INSERTS
+-- ========================================================
+CREATE TABLE Manager (
+    ManagerID INTEGER PRIMARY KEY AUTOINCREMENT,
+    EmployeeID INTEGER,
+    FOREIGN KEY (EmployeeID) REFERENCES Employee(EmployeeID)
+);
+
+INSERT INTO Manager (EmployeeID) VALUES
+(3), (7), (10), (2), (5), (8), (1), (4), (6), (9);
+
+
+-- ========================================================
+--  EMPLOYEE SHIFT TABLE AND INSERTS
+-- ========================================================
+CREATE TABLE EmployeeShift (
+    ShiftID INTEGER PRIMARY KEY AUTOINCREMENT,
+    EmployeeID INTEGER,
+    ShiftDate DATE,
+    ShiftStart TIME,
+    ShiftEnd TIME,
+    FOREIGN KEY (EmployeeID) REFERENCES Employee(EmployeeID)
+);
+
+INSERT INTO EmployeeShift (EmployeeID, ShiftDate, ShiftStart, ShiftEnd) VALUES
+(1, '2025-08-10', '09:00', '17:00'),
+(2, '2025-08-10', '12:00', '20:00'),
+(3, '2025-08-10', '08:00', '16:00'),
+(4, '2025-08-11', '09:00', '17:00'),
+(5, '2025-08-11', '12:00', '20:00'),
+(6, '2025-08-11', '08:00', '16:00'),
+(7, '2025-08-12', '09:00', '17:00'),
+(8, '2025-08-12', '12:00', '20:00'),
+(9, '2025-08-12', '08:00', '16:00'),
+(10, '2025-08-13', '09:00', '17:00');
+
+
+-- ========================================================
+--  WAREHOUSE TABLE AND INSERTS
+-- ========================================================
+CREATE TABLE Warehouse (
+    WarehouseID INTEGER PRIMARY KEY AUTOINCREMENT,
+    WarehouseLocation VARCHAR(50) NOT NULL,
+    Capacity INTEGER
+);
+
+INSERT INTO Warehouse (WarehouseLocation, Capacity) VALUES
+('Cape Town', 5000),
+('Johannesburg', 7000),
+('Durban', 4000),
+('Pretoria', 3500),
+('Port Elizabeth', 3000),
+('Bloemfontein', 2500),
+('East London', 2000),
+('Polokwane', 1800),
+('Nelspruit', 1600),
+('Kimberley', 1500);
+
+
+-- ========================================================
+--  STORE STOCK TABLE AND INSERTS
+-- ========================================================
+CREATE TABLE StoreStock (
+    ProductID INTEGER PRIMARY KEY AUTOINCREMENT,
+    ProductName VARCHAR(50) NOT NULL,
+    ProductType VARCHAR(25) NOT NULL,
+    ProductQuantity INTEGER,
+    ReorderLevel INTEGER,
+    LastUpdate DATE
+);
+
+INSERT INTO StoreStock (ProductName, ProductType, ProductQuantity, ReorderLevel, LastUpdate) VALUES
+('Bread', 'Food', 50, 20, '2025-08-10'),
+('Jeans', 'Clothing', 30, 10, '2025-08-10'),
+('Vase', 'Home Deco', 15, 5, '2025-08-10'),
+('Milk', 'Food', 40, 15, '2025-08-10'),
+('Shirt', 'Clothing', 25, 8, '2025-08-10'),
+('Lamp', 'Home Deco', 20, 5, '2025-08-10'),
+('Butter', 'Food', 35, 10, '2025-08-10'),
+('Trousers', 'Clothing', 20, 5, '2025-08-10'),
+('Curtain', 'Home Deco', 18, 5, '2025-08-10'),
+('Cheese', 'Food', 45, 15, '2025-08-10');
+
+
+-- ========================================================
+--  ORDERS TABLE AND INSERTS
+-- ========================================================
+CREATE TABLE Orders (
+    OrderID INTEGER PRIMARY KEY AUTOINCREMENT,
+    ProductID INTEGER,
+    QuantityOrdered INTEGER,
+    OrderDate DATE,
+    FOREIGN KEY (ProductID) REFERENCES StoreStock(ProductID)
+);
+
+INSERT INTO Orders (ProductID, QuantityOrdered, OrderDate) VALUES
+(1, 10, '2025-08-11'),
+(2, 5, '2025-08-11'),
+(3, 7, '2025-08-12'),
+(4, 12, '2025-08-12'),
+(5, 6, '2025-08-13'),
+(6, 8, '2025-08-13'),
+(7, 9, '2025-08-14'),
+(8, 10, '2025-08-14'),
+(9, 4, '2025-08-15'),
+(10, 11, '2025-08-15');
+
+
+-- ========================================================
+--  FOOD STOCK TABLE AND INSERTS
+-- ========================================================
+CREATE TABLE FoodStock (
+    FoodID INTEGER PRIMARY KEY AUTOINCREMENT,
+    ProductName VARCHAR(50),
+    Quantity INTEGER,
+    ExpiryDate DATE
+);
+
+INSERT INTO FoodStock (ProductName, Quantity, ExpiryDate) VALUES
+('Bread', 50, '2025-08-20'),
+('Milk', 40, '2025-08-18'),
+('Butter', 35, '2025-08-25'),
+('Cheese', 45, '2025-08-22'),
+('Yogurt', 30, '2025-08-21'),
+('Eggs', 60, '2025-08-19'),
+('Juice', 50, '2025-08-23'),
+('Apple', 100, '2025-08-16'),
+('Banana', 80, '2025-08-17'),
+('Orange', 70, '2025-08-18');
+
+
+-- ========================================================
+--  CLOTHING STOCK TABLE AND INSERTS
+-- ========================================================
+CREATE TABLE ClothingStock (
+    ClothingID INTEGER PRIMARY KEY AUTOINCREMENT,
+    ProductName VARCHAR(50),
+    Size VARCHAR(5),
+    Quantity INTEGER
+);
+
+INSERT INTO ClothingStock (ProductName, Size, Quantity) VALUES
+('Jeans', 'M', 30),
+('Shirt', 'L', 25),
+('Trousers', 'S', 20),
+('Jacket', 'XL', 15),
+('Skirt', 'M', 10),
+('Dress', 'L', 12),
+('T-Shirt', 'M', 40),
+('Shorts', 'S', 18),
+('Hoodie', 'L', 22),
+('Sweater', 'M', 20);
+
+
+-- ========================================================
+--  HOME DECO STOCK TABLE AND INSERTS
+-- ========================================================
+CREATE TABLE HomeDecoStock (
+    DecoID INTEGER PRIMARY KEY AUTOINCREMENT,
+    ProductName VARCHAR(50),
+    Material VARCHAR(25),
+    Quantity INTEGER
+);
+
+INSERT INTO HomeDecoStock (ProductName, Material, Quantity) VALUES
+('Vase', 'Ceramic', 15),
+('Lamp', 'Metal', 20),
+('Curtain', 'Cotton', 18),
+('Table', 'Wood', 10),
+('Chair', 'Wood', 25),
+('Mirror', 'Glass', 12),
+('Cushion', 'Fabric', 30),
+('Rug', 'Wool', 8),
+('Picture Frame', 'Wood', 15),
+('Clock', 'Metal', 10);
+
+
+-- ========================================================
+--  CUSTOMER TABLE AND INSERTS
+-- ========================================================
+CREATE TABLE Customer (
+    CustomerID INTEGER PRIMARY KEY AUTOINCREMENT,
+    CustomerName VARCHAR(25) NOT NULL,
+    CustomerSurname VARCHAR(25) NOT NULL,
+    Email VARCHAR(50),
+    PhoneNumber VARCHAR(10)
+);
+
+INSERT INTO Customer (CustomerName, CustomerSurname, Email, PhoneNumber) VALUES
+('Emma', 'Williams', 'emma.w@example.com', '0721112233'),
+('Liam', 'Taylor', 'liam.t@example.com', '0734445566'),
+('Noah', 'Johnson', 'noah.j@example.com', '0745556677'),
+('Olivia', 'White', 'olivia.w@example.com', '0723334455'),
+('Ava', 'Martinez', 'ava.m@example.com', '0736677889'),
+('Sophia', 'Brown', 'sophia.b@example.com', '0749988776'),
+('Mason', 'Davis', 'mason.d@example.com', '0712345566'),
+('Logan', 'Lee', 'logan.l@example.com', '0725566778'),
+('Lucas', 'Clark', 'lucas.c@example.com', '0734455667'),
+('Ethan', 'Lewis', 'ethan.l@example.com', '0743344556');
+
+
+-- ========================================================
+--  SALES TRANSACTIONS TABLE AND INSERTS
+-- ========================================================
+CREATE TABLE SalesTransactions (
+    TransactionID INTEGER PRIMARY KEY AUTOINCREMENT,
+    CustomerID INTEGER,
+    ProductID INTEGER,
+    SaleDate DATE,
+    QuantitySold INTEGER,
+    TotalAmount DECIMAL(10,2),
+    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
+    FOREIGN KEY (ProductID) REFERENCES StoreStock(ProductID)
+);
+
+INSERT INTO SalesTransactions (CustomerID, ProductID, SaleDate, QuantitySold, TotalAmount) VALUES
+(1, 1, '2025-08-10', 2, 30.00),
+(2, 2, '2025-08-10', 1, 45.00),
+(3, 3, '2025-08-11', 1, 25.00),
+(4, 4, '2025-08-11', 3, 60.00),
+(5, 5, '2025-08-12', 2, 50.00),
+(6, 6, '2025-08-12', 1, 35.00),
+(7, 7, '2025-08-13', 4, 80.00),
+(8, 8, '2025-08-13', 2, 40.00),
+(9, 9, '2025-08-14', 1, 20.00),
+(10, 10, '2025-08-14', 3, 90.00);
+
+-- ========================================================
+-- Data to exist
+-- ========================================================
+
+INSERT INTO Customer (CustomerName, CustomerSurname, Email, PhoneNumber) VALUES
+('Noah', 'Johnson', 'noah.j@example.com', '0745556677');
+
+INSERT INTO Employee (EmployeeName, EmployeeSurname, EmailAddress, Position, PhoneNumber) VALUES
+('Sophia', 'Green', 'sophia.g@example.com', 'Cashier', '0728889999');
+
+INSERT INTO SalesTransactions (CustomerID, ProductID, SaleDate, QuantitySold, TotalAmount) VALUES
+(1, 1, DATE('now'), 1, 15.00);
+
+-- ========================================================
+--  Queries
+-- ========================================================
+
+-- Update
+UPDATE Customer
+SET PhoneNumber = '0729998887'
+WHERE CustomerID = 1;
+
+
+UPDATE StoreStock
+SET ProductQuantity = ProductQuantity + 10
+WHERE ProductID = 1;
+
+
+UPDATE Employee
+SET Position = 'Senior Cashier'
+WHERE EmployeeID = 1;
+
+-- Delete
+DELETE FROM Orders
+WHERE OrderID = 10;
+
+
+-- Delete shifts for employee 10
+DELETE FROM EmployeeShift
+WHERE EmployeeID = 10;
+
+-- Delete sales for employee 10 (if any)
+DELETE FROM SalesTransactions
+WHERE ProductID IN (SELECT ProductID FROM StoreStock WHERE ProductID = 10);
+
+-- Delete manager entry for employee 10 (if any)
+DELETE FROM Manager
+WHERE EmployeeID = 10;
+
+-- Now delete the employee
+DELETE FROM Employee
+WHERE EmployeeID = 10;
+
+
+
+DELETE FROM SalesTransactions
+WHERE TransactionID = 10;
+
+-- ========================================================
+--  VIEWS
+-- ========================================================
+
+-- Drop views if they already exist
+DROP VIEW IF EXISTS StoreInventoryView;
+DROP VIEW IF EXISTS EmployeeShiftsView;
+DROP VIEW IF EXISTS ManagersWarehousesView;
+DROP VIEW IF EXISTS CustomerView;
+DROP VIEW IF EXISTS EmployeeView;
+DROP VIEW IF EXISTS SalesTransactionsView;
+DROP VIEW IF EXISTS FoodStockView;
+DROP VIEW IF EXISTS ClothingStockView;
+DROP VIEW IF EXISTS HomeDecoStockView;
+DROP VIEW IF EXISTS OrdersView;
+
+--  Store Inventory View
+CREATE VIEW StoreInventoryView AS
+SELECT 
+    ProductID,
+    ProductName,
+    ProductType,
+    ProductQuantity,
+    ReorderLevel,
+    CASE 
+        WHEN ProductQuantity <= ReorderLevel THEN 'Yes'
+        ELSE 'No'
+    END AS NeedsRestock,
+    LastUpdate
+FROM StoreStock;
+
+-- Employee Shifts View
+CREATE VIEW EmployeeShiftsView AS
+SELECT 
+    e.EmployeeName,
+    e.EmployeeSurname,
+    s.ShiftDate,
+    s.ShiftStart,
+    s.ShiftEnd
+FROM Employee e
+JOIN EmployeeShift s ON e.EmployeeID = s.EmployeeID;
+
+--  Managers View (Managers and their Employees)
+-- Manager table does not include WarehouseID, so only Employee info shown
+CREATE VIEW ManagersWarehousesView AS
+SELECT 
+    m.ManagerID,
+    e.EmployeeName || ' ' || e.EmployeeSurname AS ManagerName
+FROM Manager m
+JOIN Employee e ON m.EmployeeID = e.EmployeeID;
+
+-- Customer View
+CREATE VIEW CustomerView AS
+SELECT 
+    CustomerID,
+    CustomerName || ' ' || CustomerSurname AS FullName,
+    Email,
+    PhoneNumber
+FROM Customer;
+
+--  Employee View
+CREATE VIEW EmployeeView AS
+SELECT 
+    EmployeeID,
+    EmployeeName || ' ' || EmployeeSurname AS FullName,
+    Position,
+    EmailAddress,
+    PhoneNumber
+FROM Employee;
+
+-- Sales Transactions View
+-- No EmployeeID in SalesTransactions, so we only link Customers and Products
+CREATE VIEW SalesTransactionsView AS
+SELECT 
+    s.SaleID,
+    c.CustomerName || ' ' || c.CustomerSurname AS CustomerName,
+    s.ProductID,
+    s.QuantitySold,
+    s.TotalAmount,
+    s.SaleDate
+FROM SalesTransactions s
+JOIN Customer c ON s.CustomerID = c.CustomerID;
+
+--  Food Stock View
+CREATE VIEW FoodStockView AS
+SELECT 
+    FoodID,
+    ProductName,
+    ExpiryDate,
+    Quantity AS ProductQuantity
+FROM FoodStock;
+
+--  Clothing Stock View
+CREATE VIEW ClothingStockView AS
+SELECT 
+    ClothingID,
+    ProductName,
+    Size,
+    Quantity AS ProductQuantity
+FROM ClothingStock;
+
+-- Home Decoration Stock View
+CREATE VIEW HomeDecoStockView AS
+SELECT 
+    DecoID,
+    ProductName,
+    Material,
+    Quantity AS ProductQuantity
+FROM HomeDecoStock;
+
+-- 12j. Orders View
+CREATE VIEW OrdersView AS
+SELECT 
+    OrderID,
+    ProductID,
+    QuantityOrdered,
+    OrderDate
+FROM Orders;
+
+-- ========================================================
+--  DISPLAY ALL TEN TABLES CONTENT (with sorting)
+-- ========================================================
+SELECT * FROM Employee ORDER BY EmployeeName;
+SELECT * FROM Manager ORDER BY ManagerID;
+SELECT * FROM EmployeeShift ORDER BY ShiftDate;
+SELECT * FROM Warehouse ORDER BY Capacity DESC;
+SELECT * FROM StoreStock ORDER BY ProductName;
+SELECT * FROM Orders ORDER BY OrderDate DESC;
+SELECT * FROM FoodStock ORDER BY ExpiryDate;
+SELECT * FROM ClothingStock ORDER BY ProductName;
+SELECT * FROM HomeDecoStock ORDER BY ProductName;
+SELECT * FROM Customer ORDER BY CustomerName;
+SELECT * FROM SalesTransactions ORDER BY SaleDate;
+
+-- ========================================================
+--  GROUPING & AGGREGATION
+-- ========================================================
+-- Total sales per customer
+SELECT c.CustomerName, SUM(s.TotalAmount) AS TotalSpent
+FROM SalesTransactions s
+JOIN Customer c ON s.CustomerID = c.CustomerID
+GROUP BY c.CustomerName
+HAVING SUM(s.TotalAmount) > 50;
+
+-- ========================================================
+--  JOINS (Inner + Outer)
+-- ========================================================
+-- INNER JOIN: Employees and their shifts
+SELECT e.EmployeeName, s.ShiftDate, s.ShiftStart, s.ShiftEnd
+FROM Employee e
+INNER JOIN EmployeeShift s ON e.EmployeeID = s.EmployeeID;
+
+-- LEFT JOIN: Orders and matching StoreStock items
+SELECT o.OrderID, o.QuantityOrdered, ss.ProductName
+FROM Orders o
+LEFT JOIN StoreStock ss ON o.ProductID = ss.ProductID;
+
+-- ========================================================
+--  SUBQUERIES
+-- ========================================================
+-- Find employees who are also managers
+SELECT EmployeeName, EmployeeSurname
+FROM Employee
+WHERE EmployeeID IN (SELECT EmployeeID FROM Manager);
+
+-- Customers who spent above the average
+SELECT c.CustomerName, c.CustomerSurname
+FROM Customer c
+WHERE EXISTS (
+    SELECT 1
+    FROM SalesTransactions s
+    WHERE s.CustomerID = c.CustomerID
+    AND s.TotalAmount > (SELECT AVG(TotalAmount) FROM SalesTransactions)
+);
+
+-- ========================================================
+-- FUNCTIONS
+-- ========================================================
+-- Date/Time
+SELECT julianday('now') - julianday(ShiftDate) AS DaysAgo
+FROM EmployeeShift;
+
+-- String
+SELECT UPPER(EmployeeName) AS UpperName, LENGTH(EmployeeSurname) AS NameLength
+FROM Employee;
+
+-- Numeric
+SELECT ROUND(AVG(TotalAmount), 2) AS AvgSale
+FROM SalesTransactions;
+
+-- Conversion (cast)
+SELECT CustomerID, CAST(PhoneNumber AS TEXT) AS PhoneText
+FROM Customer;
+
+-- ========================================================
+--  UNION
+-- ========================================================
+-- Union of all product names from different stock tables
+SELECT ProductName FROM StoreStock
+UNION
+SELECT ProductName FROM FoodStock
+UNION
+SELECT ProductName FROM ClothingStock
+UNION
+SELECT ProductName FROM HomeDecoStock;
+
+-- ========================================================
+--  TRIGGER
+-- ========================================================
+-- Automatically update StoreStock quantity when a Sale occurs
+CREATE TRIGGER IF NOT EXISTS UpdateStockAfterSale
+AFTER INSERT ON SalesTransactions
+BEGIN
+    UPDATE StoreStock
+    SET ProductQuantity = ProductQuantity - NEW.QuantitySold
+    WHERE ProductID = NEW.ProductID;
+END;
+
+
+
+
