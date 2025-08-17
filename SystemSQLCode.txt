@@ -373,9 +373,6 @@ JOIN Warehouse w ON w.InventoryType IN ('Food','Clothing','Home Decor');
 
 
 
---Siddeeqs work
-
-
 -- Customer View
 
 
@@ -590,4 +587,5 @@ BEGIN
     SET ProductQuantity = ProductQuantity - NEW.QuantitySold
     WHERE ProductID = NEW.ProductID;
 END;
+
 
